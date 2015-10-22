@@ -721,7 +721,7 @@ ompl::base::PlannerStatus ompl::geometric::RRTsharp::solve(const base::PlannerTe
                             mc->cost = temp_Cost;
                             mc->incCost = temp_incCost;
                             mc->parent->children.push_back(mc);
-                            checkForSolution = true
+                            checkForSolution = true;
                         }
 
                         if (opt_->isCostBetterThan(opt_->combineCosts(mc->cost, opt_->motionCost(mc->state, nbh[i]->state)),nbh[i]->cost) && toVisitMotions.count(nbh[i])==0 && visitedMotions.count(nbh[i])==0){

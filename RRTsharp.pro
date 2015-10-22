@@ -15,8 +15,8 @@ CONFIG += c++11
 
 SOURCES += RRTsharp.cpp \
         window.cpp \
-        main.cpp \
 #        sharp_planning.cpp\
+    benchmark.cpp
 
 HEADERS  += window.h \
         RRTsharp.h
