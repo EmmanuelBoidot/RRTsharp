@@ -794,7 +794,7 @@ ompl::base::PlannerStatus ompl::geometric::RRTsharp::solve(const base::PlannerTe
 
             while (!nodesToAnalyzeForRewiring.empty())
             {
-//                if (((int)nn_->size())>3000)
+//                if (((int)nn_->size())>7000)
 //                    usleep(200000);
                 Motion* mc = nodesToAnalyzeForRewiring.top();
                 nodesToAnalyzeForRewiring.pop();
@@ -804,40 +804,52 @@ ompl::base::PlannerStatus ompl::geometric::RRTsharp::solve(const base::PlannerTe
                 nn_->nearestK(mc, k, nbh);
 //                Cost minNbhCost = mc->cost;
 
+                bool updatedWiring = false;
+                if (mc!=motion){
+                    for (std::size_t i = 0; i < nbh.size(); ++i){
+                        rewireTest++;
+                        // TODO: add if(symCost) option
+                        base::Cost temp_incCost = opt_->motionCost(nbh[i]->state, mc->state);
+                        base::Cost temp_Cost = opt_->combineCosts(nbh[i]->cost, temp_incCost);
 
-                for (std::size_t i = 0; i < nbh.size(); ++i){
-                    rewireTest++;
-                    // TODO: add if(symCost) option
-                    base::Cost temp_incCost = opt_->motionCost(nbh[i]->state, mc->state);
-                    base::Cost temp_Cost = opt_->combineCosts(nbh[i]->cost, temp_incCost);
+                        if (opt_->isCostBetterThan(temp_Cost,mc->cost)){
+                            if (si_->checkMotion(nbh[i]->state, mc->state))
+                            {
+                                removeFromParent (mc);
 
-                    if (opt_->isCostBetterThan(temp_Cost,mc->cost)){
-                        if (si_->checkMotion(nbh[i]->state, mc->state))
-                        {
-                            removeFromParent (mc);
+                                mc->parent = nbh[i];
+                                mc->cost = temp_Cost;
+                                mc->incCost = temp_incCost;
+                                mc->parent->children.push_back(mc);
+                                updatedWiring = true;
 
-                            mc->parent = nbh[i];
-                            mc->cost = temp_Cost;
-                            mc->incCost = temp_incCost;
-                            mc->parent->children.push_back(mc);
-
-                            // add children to update list
-                            for (std::size_t j = 0; j < mc->children.size(); ++j){
-                                nodesToAnalyzeForRewiring.push(mc->children[j]);
-                                toVisitMotions.insert(mc->children[j]);
+                                checkForSolution = true;
                             }
+                        }
 
-                            checkForSolution = true;
+                    }
+                } else {
+                    updatedWiring = true;
+                }
+
+                if (updatedWiring){
+                    // add children to update list
+                    for (std::size_t j = 0; j < mc->children.size(); ++j){
+                        if (toVisitMotions.count(mc->children[j])==0 && visitedMotions.count(mc->children[j])==0){
+                            nodesToAnalyzeForRewiring.push(mc->children[j]);
+                            toVisitMotions.insert(mc->children[j]);
                         }
                     }
 
-                    if (opt_->isCostBetterThan(opt_->combineCosts(mc->cost, opt_->motionCost(mc->state, nbh[i]->state)),nbh[i]->cost) && toVisitMotions.count(nbh[i])==0 && visitedMotions.count(nbh[i])==0){
-                        nodesToAnalyzeForRewiring.push(nbh[i]);
-                        toVisitMotions.insert(nbh[i]);
-//                            if (((int)nn_->size())>3000)
-//                                usleep(100000);
+                    for (std::size_t i = 0; i < nbh.size(); ++i){
+                        // TODO: avoid repeated calculation of same value
+                        if (opt_->isCostBetterThan(opt_->combineCosts(mc->cost, opt_->motionCost(mc->state, nbh[i]->state)),nbh[i]->cost) && toVisitMotions.count(nbh[i])==0 && visitedMotions.count(nbh[i])==0){
+                            nodesToAnalyzeForRewiring.push(nbh[i]);
+                            toVisitMotions.insert(nbh[i]);
+                        }
                     }
                 }
+
 
 
 
