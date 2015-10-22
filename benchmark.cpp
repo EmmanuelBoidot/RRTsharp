@@ -84,7 +84,7 @@ void benchmark0(std::string& benchmark_name, app::SE3RigidBodyPlanning& setup,
 
     runtime_limit = 10.0;
     memory_limit  = 10000.0; // set high because memory usage is not always estimated correctly
-    run_count     = 1;
+    run_count     = 10;
 }
 
 void benchmark1(std::string& benchmark_name, app::SE3RigidBodyPlanning& setup,

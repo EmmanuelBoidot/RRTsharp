@@ -178,7 +178,7 @@ void sharp_plan(Window &w)
 
     // attempt to solve the planning problem within one second of
     // planning time
-    ob::PlannerStatus solved = optimizingPlanner->solve(10.0);
+    ob::PlannerStatus solved = optimizingPlanner->solve(100.0);
 
     if (solved)
     {
