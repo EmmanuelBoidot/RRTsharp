@@ -87,7 +87,6 @@ namespace ompl
             virtual void getPlannerData(base::PlannerData &data) const;
 
             virtual base::PlannerStatus solve(const base::PlannerTerminationCondition &ptc);
-//            base::PlannerStatus solve2(const base::PlannerTerminationCondition &ptc);
 
             virtual void clear();
 
@@ -325,67 +324,6 @@ namespace ompl
                     return n1.second.value() < n2.second.value();
                 }
             };
-
-            class MotionCostPair : public std::pair<Motion*, ompl::base::Cost>
-            {
-            public:
-                MotionCostPair(Motion *m, const base::Cost &c){
-                    this->first = m;
-                    this->second = c;
-                }
-
-                bool operator<(const MotionCostPair &comp) const
-                {
-                    return (this->second.value() > comp.second.value());
-                }
-            };
-
-            class MotionCandidate
-            {
-            public:
-                MotionCandidate(Motion *p, Motion *m, const base::Cost &c){
-                    parent_motionptr = p;
-                    motionptr = m;
-                    incCost = c;
-                    cost = base::Cost(std::numeric_limits<double>::quiet_NaN());
-                    valid = true;
-                }
-                MotionCandidate(Motion *p, Motion *m, const base::Cost &c, const base::Cost &c2){
-                    parent_motionptr = p;
-                    motionptr = m;
-                    incCost = c;
-                    cost = c2;
-                    valid = true;
-                }
-                MotionCandidate(Motion *p, Motion *m, const base::Cost &c, const base::Cost &c2, bool isValid){
-                    parent_motionptr = p;
-                    motionptr = m;
-                    incCost = c;
-                    cost = c2;
-                    valid = isValid;
-                }
-
-                bool operator<(const MotionCandidate &comp) const
-                {
-                    return (cost.value() < cost.value());
-                }
-
-                Motion* parent_motionptr;
-                Motion* motionptr;
-                base::Cost incCost;
-                base::Cost cost;
-                bool valid;
-            };
-
-            void addRewireCandidates(
-                            Motion* nmotion,
-                            unsigned int k,
-                            std::vector<Motion*> &nbh,
-                            std::vector<base::Cost> &costs,
-                            std::vector<base::Cost> &incCosts,
-                            std::vector<std::size_t> &sortedCostIndices,
-                            std::vector<int> &valid,
-                            Motion* motion);
 
             std::priority_queue< Motion* ,std::vector<Motion*>, std::greater<Motion*>> nodesToAnalyzeForRewiring;
             std::set< Motion* > toVisitMotions;
