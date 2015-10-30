@@ -54,7 +54,7 @@ namespace ompl
 
     namespace geometric
     {
-
+        // TODO: modify description below
         /**
            @anchor gRRTsharp
            @par Short description
@@ -316,14 +316,6 @@ namespace ompl
             unsigned int                                   iterations_;
             /** \brief Best cost found so far by algorithm */
             base::Cost                                     bestCost_;
-
-            class CompareMotion
-            {
-            public:
-                bool operator()(std::pair<Motion*,ompl::base::Cost> n1,std::pair<Motion*,ompl::base::Cost> n2) {
-                    return n1.second.value() < n2.second.value();
-                }
-            };
 
             std::priority_queue< Motion* ,std::vector<Motion*>, std::greater<Motion*>> nodesToAnalyzeForRewiring;
             std::set< Motion* > toVisitMotions;
