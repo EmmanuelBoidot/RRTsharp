@@ -600,12 +600,12 @@ void ompl::geometric::RRTsharp::getPlannerData(base::PlannerData &data) const
         else
             data.addEdge(base::PlannerDataVertex(motions[i]->parent->state),
                          base::PlannerDataVertex(motions[i]->state));
-        if (visitedMotions.count(motions[i])!=0){
-            data.tagState(motions[i]->state,1);
-        }
-        if (toVisitMotions.count(motions[i])!=0){
-            data.tagState(motions[i]->state,2);
-        }
+        // if (visitedMotions.count(motions[i])!=0){
+        //     data.tagState(motions[i]->state,1);
+        // }
+        // if (toVisitMotions.count(motions[i])!=0){
+        //     data.tagState(motions[i]->state,2);
+        // }
     }
 }
 
