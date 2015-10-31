@@ -209,10 +209,10 @@ int main(int argc, char** argv)
 {
     QApplication a(argc, argv);
     Window w;
-    w.show();
 
     auto fun = std::bind(&sharp_plan, std::ref(w));
     boost::thread t(fun);
+    w.show();
     a.exec();
     t.join();
 
